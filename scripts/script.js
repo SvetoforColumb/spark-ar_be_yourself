@@ -1,4 +1,4 @@
-const Diagnostics = require('Diagnostics');
+// const Diagnostics = require('Diagnostics');
 // @ts-ignore
 // @ts-ignore
 // @ts-ignore
@@ -50,9 +50,9 @@ function glitchSignal(time_p) {
 
     // Diagnostics.watch("time_p", time_p);
     // @ts-ignore
-    var st_y_1 = R.add(texcoords.y, 0.0);
+    var st_y = R.add(texcoords.y, 0.0);
     // @ts-ignore
-    var st_x_1 = R.add(texcoords.x, 0.0);
+    var st_x = R.add(texcoords.x, 0.0);
     
     // @ts-ignore
     var t = R.mul(time_p, 5.0);
@@ -63,45 +63,45 @@ function glitchSignal(time_p) {
     // @ts-ignore
     var up3 = hash(R.pack2(R.mul(t, 2.0), (R.mul(t, 2.0))));
     
-    var st_x_2 = R.mix(
+    var st_x_1 = R.mix(
+        st_x, 
+        // @ts-ignore
+        R.add(st_x, R.mul(R.floor(R.sin(R.mul((R.mul(t, 2.0)), 3.0))), R.mul(R.add(0.01, R.mul(R.mul(up, up), 0.1)), 0.2))), 
+        // @ts-ignore
+        R.sub(R.smoothStep(up, R.add(up, 0.1), st_y), R.smoothStep(R.add(up, 0.1), R.add(R.add(up, 0.1), 0.05), st_y))
+        );
+    
+    st_x_1 = R.mix(
         st_x_1, 
         // @ts-ignore
-        R.add(st_x_1, R.mul(R.floor(R.sin(R.mul((R.mul(t, 2.0)), 3.0))), R.mul(R.add(0.01, R.mul(R.mul(up, up), 0.1)), 0.2))), 
+        R.add(st_x_1, R.mul(R.floor(R.mul(R.sin(R.mul(t, 2.0)), 3.0)), R.mul((R.add(0.01, R.mul(up2, R.mul(up2, 0.1)))), 0.1))), 
         // @ts-ignore
-        R.sub(R.smoothStep(up, R.add(up, 0.1), st_y_1), R.smoothStep(R.add(up, 0.1), R.add(R.add(up, 0.1), 0.05), st_y_1))
+        R.sub(R.smoothStep(up2, R.add(up2, 0.0), st_y), R.smoothStep(R.add(up2, 0.05), R.add(up2, R.add(0.05, 0.0)), st_y))
         );
     
-    var st_x_3 = R.mix(
-        st_x_2, 
+    st_x_1 = R.mix(
+        st_x_1, 
         // @ts-ignore
-        R.add(st_x_2, R.mul(R.floor(R.mul(R.sin(R.mul(t, 2.0)), 3.0)), R.mul((R.add(0.01, R.mul(up2, R.mul(up2, 0.1)))), 0.1))), 
+        R.add(st_x_1, R.mul(R.floor(R.mul(R.sin(R.mul(t, 2.0)), 3.0)), R.mul(R.add(0.01, R.mul(up3, R.mul(up3, 0.1))), 0.1))), 
         // @ts-ignore
-        R.sub(R.smoothStep(up2, R.add(up2, 0.0), st_y_1), R.smoothStep(R.add(up2, 0.05), R.add(up2, R.add(0.05, 0.0)), st_y_1))
-        );
-    
-    var st_x_4 = R.mix(
-        st_x_3, 
-        // @ts-ignore
-        R.add(st_x_3, R.mul(R.floor(R.mul(R.sin(R.mul(t, 2.0)), 3.0)), R.mul(R.add(0.01, R.mul(up3, R.mul(up3, 0.1))), 0.1))), 
-        // @ts-ignore
-        R.sub(R.smoothStep(up3, R.add(up3, 0.0), st_y_1), R.smoothStep(R.add(up3, 0.01), R.add(up3, R.add(0.01, 0.0)), st_y_1))
+        R.sub(R.smoothStep(up3, R.add(up3, 0.0), st_y), R.smoothStep(R.add(up3, 0.01), R.add(up3, R.add(0.01, 0.0)), st_y))
         );
     
     // @ts-ignore
-    var st_x_5 = R.mix(st_x_1, st_x_4, glitch_value_st);
+    st_x_1 = R.mix(st_x, st_x_1, glitch_value_st);
 
     const newUV = R.pack2(
         // @ts-ignore
-        st_x_5,
+        st_x_1,
         // @ts-ignore
-        st_y_1
+        st_y
     );   
 
     return newUV;
 }
 
 // @ts-ignore
-function glitchColor(color, st_2){
+function glitchColor(color, st_2, time_p){
 
     var glitch_value_color = 0.5;
    
@@ -125,7 +125,7 @@ function glitchColor(color, st_2){
         0.0
         );
     
-    var color_2 = R.add(color_1, R.pack3(
+    color_1 = R.add(color_1, R.pack3(
         // @ts-ignore
         0.0, 
         // @ts-ignore
@@ -133,7 +133,7 @@ function glitchColor(color, st_2){
         0.0
         ));
     
-    var color_3 = R.add(color_2, R.pack3(
+    color_1 = R.add(color_1, R.pack3(
         // @ts-ignore
         0.0, 
         0.0, 
@@ -144,11 +144,11 @@ function glitchColor(color, st_2){
     
 
     // @ts-ignore
-    var color_red = color_3.x;
+    var color_red = color_1.x;
     // @ts-ignore
-    var color_green = color_3.y;
+    var color_green = color_1.y;
     // @ts-ignore
-    var color_blue = color_3.z;
+    var color_blue = color_1.z;
 
     // @ts-ignore
     var new_color = R.mix(color, R.pack4(color_red, color_green, color_blue, 1.0), R.mul(glitch_value_color, hash(R.pack2(time_p, time_p))));
